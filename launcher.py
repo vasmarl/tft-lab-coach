@@ -1,4 +1,5 @@
 """Launcher window: key setup screen + main screen with the two modes."""
+import queue
 import subprocess
 import sys
 import threading
@@ -102,11 +103,18 @@ class Launcher:
         self.connect_btn.config(state="disabled")
         self.key_msg.config(text="Checking the key...", fg=MUTED)
 
-        def work():
-            ok, msg = keystore.check_key(key)
-            self.root.after(0, lambda: self._key_checked(key, ok, msg))
+        result = queue.Queue()
+        threading.Thread(target=lambda: result.put(keystore.check_key(key)), daemon=True).start()
+        self._wait_key_check(key, result)
 
-        threading.Thread(target=work, daemon=True).start()
+    def _wait_key_check(self, key, result):
+        """Poll the worker's result on the UI thread (Tk isn't thread-safe)."""
+        try:
+            ok, msg = result.get_nowait()
+        except queue.Empty:
+            self.root.after(100, self._wait_key_check, key, result)
+            return
+        self._key_checked(key, ok, msg)
 
     def _key_checked(self, key, ok, msg):
         self.connect_btn.config(state="normal")
