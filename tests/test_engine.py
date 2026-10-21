@@ -108,3 +108,9 @@ def test_engine_comments_and_resumes(tmp_path, monkeypatch):
     log = coach.transcript_path.read_text()
     assert "**Coach:** Slam the sword now." in log
     assert "Frames streamed" in log
+
+
+def test_bad_key_stops_without_retrying():
+    err = Exception("1007 None. API key not valid. Please pass a valid API key.")
+    assert "Change key" in engine.fatal_message(err)
+    assert engine.fatal_message(Exception("1011 internal error")) is None

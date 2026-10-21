@@ -31,7 +31,7 @@ function Check($name, $argList, $seconds) {
         $script:failed = $true
     } else {
         Write-Host "OK: $name is running"
-        Stop-Process -Id $p.Id -Force
+        taskkill /T /F /PID $p.Id | Out-Null   # onefile exe = bootloader + child
         Start-Sleep -Seconds 2
     }
 }
@@ -44,7 +44,7 @@ Set-Content -Path (Join-Path $work ".env") -Value "GOOGLE_API_KEY=ci-fake-key"
 Check "2_main_screen" $null 8
 
 # 3. File mode plays the video (fake key -> shows Reconnecting, must not crash)
-Check "3_file_mode" @("--file", "`"$work\sample_game.mp4`"") 10
+Check "3_file_mode" @("--file", "`"$work\sample_game.mp4`"") 12
 
 # 4. Screen mode window picker
 Check "4_screen_picker" @("--screen") 8

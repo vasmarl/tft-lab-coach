@@ -49,6 +49,7 @@ def run(path: str, api_key: str, talk_every: float = 8) -> int:
     clock = VideoClock()
     frame_idx = 0
     shown = None
+    sized = False
     paused = False
     ended_at = None
 
@@ -69,6 +70,9 @@ def run(path: str, api_key: str, talk_every: float = 8) -> int:
                     else:
                         frame_idx += 1
                         shown = fit(frame)
+                        if not sized:
+                            cv2.resizeWindow(WINDOW, shown.shape[1], shown.shape[0])
+                            sized = True
                         coach.submit_frame(frame)
 
             if shown is not None:

@@ -24,6 +24,7 @@ def test_window_filter_hides_riot_and_league():
         (9, "   ", "notepad.exe", 17),
         (10, "Lobby", "RiotClientServices.exe", 18),
         (11, "Lobby", "LeagueClient.exe", 19),
+        (12, "Program Manager", "explorer.exe", 20),
     ]
     kept = safeguard.filter_windows(windows, own_pid=99)
     labels = [safeguard.label(w) for w in kept]

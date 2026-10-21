@@ -22,6 +22,12 @@ FRAME_WIDTH = 1024
 JPEG_QUALITY = 80
 STUCK_TURN_SECONDS = 25
 MAX_RETRIES = 5
+FATAL_ERRORS = {
+    "api key not valid": "Your Google AI key doesn't work. Open TFTCoach and click \"Change key\".",
+    "api_key_invalid": "Your Google AI key doesn't work. Open TFTCoach and click \"Change key\".",
+    "not found": "The live model wasn't found. Set TFT_LIVE_MODEL in the .env file.",
+    "not supported": "The live model doesn't support live audio. Set TFT_LIVE_MODEL in the .env file.",
+}
 CAPTION_CHARS = 180
 COMMENT_PROMPT = "Comment on the current moment of the game."
 
@@ -48,6 +54,15 @@ def encode_frame(bgr: np.ndarray) -> bytes:
     if not ok:
         raise ValueError("JPEG encode failed")
     return buf.tobytes()
+
+
+def fatal_message(exc: Exception):
+    """Errors that retrying can't fix get a clear message instead of retries."""
+    text = str(exc).lower()
+    for needle, message in FATAL_ERRORS.items():
+        if needle in text:
+            return message
+    return None
 
 
 class Player:
@@ -308,6 +323,13 @@ class LiveCoach:
                     break
                 failures += 1
                 print(f"Live connection error ({failures}/{MAX_RETRIES}):", repr(e))
+                fatal = fatal_message(e)
+                if fatal:
+                    self.status = "Stopped"
+                    self.error = str(e)
+                    self.caption = fatal
+                    self._transcript.note(f"Stopped: {e}")
+                    return
                 if failures > MAX_RETRIES:
                     self.status = "Disconnected"
                     self.error = str(e)

@@ -16,6 +16,7 @@ HIDDEN_PROCESSES = {
     "riotclientux.exe",
 }
 HIDDEN_TITLE_WORDS = ("league of legends", "riot client", "teamfight tactics")
+HIDDEN_TITLES = {"program manager"}  # the Windows desktop
 
 BLOCK_MESSAGE = ("A League of Legends match is running. TFT Lab Coach only works on "
                  "recorded videos, never on live games.")
@@ -47,6 +48,8 @@ def is_hidden_window(title: str, process: str) -> bool:
     if (process or "").lower() in HIDDEN_PROCESSES:
         return True
     t = (title or "").lower()
+    if t.strip() in HIDDEN_TITLES:
+        return True
     return any(w in t for w in HIDDEN_TITLE_WORDS)
 
 

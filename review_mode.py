@@ -149,7 +149,7 @@ def run(path: str, api_key: str, client=None) -> int:
 
     cv2.namedWindow(WINDOW, cv2.WINDOW_NORMAL)
     clock = VideoClock()
-    frame_idx, shown, paused = 0, None, False
+    frame_idx, shown, paused, sized = 0, None, False, False
     next_sample = 1.0
     try:
         while True:
@@ -165,6 +165,9 @@ def run(path: str, api_key: str, client=None) -> int:
                         break
                     frame_idx += 1
                     shown = fit(frame)
+                    if not sized:
+                        cv2.resizeWindow(WINDOW, shown.shape[1], shown.shape[0])
+                        sized = True
                     at = frame_idx / fps
                     if at >= next_sample and not busy.is_set():
                         busy.set()
