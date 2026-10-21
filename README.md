@@ -18,12 +18,12 @@ Live AI voice coaching on **recorded** Teamfight Tactics videos (Windows, single
 
 | | Video file window | Screen mode |
 |---|---|---|
-| Ask the coach a question | `M` to turn the mic on, speak, then `M` again | **Mic** button or `Ctrl+Shift+M` |
+| Ask the coach a question | `M`, then speak (mic turns off by itself when the coach answers) | **Mic** button or `Ctrl+Shift+M` |
 | Pause / resume | `Space` | **Pause** button or `Ctrl+Shift+P` |
 | Stop | `Q` | **Stop** button or `Ctrl+Shift+Q` |
 
-When the mic is on, the coach stops talking and listens. Nothing is sent from the mic while it is off.
-The **Talk every (sec)** slider (4–20 s, default 8) sets how often the coach comments.
+The coach doesn't commentate: every few seconds it tells the player the single best next action (level, roll, hold gold, slam an item, reposition, which augment) and why. When the mic is on, the coach stops talking and listens. Nothing is sent from the mic while it is off.
+The **Advice every (sec)** slider (4–20 s, default 6) sets how often the coach gives the next instruction.
 
 ## Cost
 

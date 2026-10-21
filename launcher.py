@@ -139,7 +139,7 @@ class Launcher:
 
         sl = tk.Frame(f, bg=BG)
         sl.pack(fill="x", pady=(16, 4))
-        self._label(sl, "Talk every (sec)", 10, MUTED)
+        self._label(sl, "Advice every (sec)", 10, MUTED)
         tk.Scale(sl, from_=4, to=20, orient="horizontal", variable=self.talk_every,
                  bg=BG, fg=FG, troughcolor=CARD, highlightthickness=0,
                  activebackground=ACCENT).pack(fill="x")

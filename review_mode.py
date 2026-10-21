@@ -15,7 +15,7 @@ from datetime import datetime
 import cv2
 
 from common import app_dir, fmt_time, review_model, stamp
-from engine import encode_frame
+from engine import TFT_RULES, encode_frame
 from file_mode import VideoClock
 from overlay import draw_bar, fit, window_closed
 
@@ -23,9 +23,11 @@ WINDOW = "TFT Lab Coach REVIEW"
 SAMPLE_EVERY = 5.0
 
 TIP_PROMPT = """You are a Challenger-level Teamfight Tactics coach reviewing a frame of a recorded TFT game.
+Decide the single best action the player should take next to win (an order, e.g. "Level to 7 and roll to 20 gold"), with a short reason.
 Reply with JSON only:
-{"skip": true|false, "stage": "e.g. 3-2 or unknown", "state": "very short board/economy summary", "tip": "one concrete coaching tip, max 25 words"}
+{"skip": true|false, "stage": "e.g. 3-2 or unknown", "state": "very short board/economy summary", "tip": "the action + reason, max 25 words"}
 Set "skip" to true if the frame is not TFT gameplay (menus, loading, webcam only, ads) or if there is nothing new worth saying.
+""" + TFT_RULES + """
 Previous tips (do not repeat them):
 """
 

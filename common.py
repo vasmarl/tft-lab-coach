@@ -7,7 +7,7 @@ from pathlib import Path
 APP_NAME = "TFT Lab Coach"
 DEFAULT_LIVE_MODEL = "gemini-3.8-live"
 DEFAULT_REVIEW_MODEL = "gemini-2.5-flash"
-DEFAULT_TALK_EVERY = 8
+DEFAULT_TALK_EVERY = 6
 
 
 def app_dir() -> Path:
