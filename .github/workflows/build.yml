@@ -63,3 +63,22 @@ jobs:
           name: TFTCoach
           path: dist/TFTCoach.exe
           if-no-files-found: error
+
+      - name: GUI smoke test (launch every screen, take screenshots)
+        shell: pwsh
+        run: ./ci/gui_smoke.ps1
+
+      - name: Real Gemini Live check (only if GOOGLE_API_KEY secret is set)
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python ci/live_check.py smoke/sample_game.mp4 smoke
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: |
+            screenshots/*.png
+            smoke/*.log
+            smoke/*.md
+          if-no-files-found: ignore
