@@ -1,0 +1,11 @@
+.env
+*.log
+coach_*log_*.md
+selftest_ok.txt
+dist/
+build/
+*.spec
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
