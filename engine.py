@@ -21,6 +21,8 @@ FRAME_INTERVAL = 1.0  # max 1 fps to the model
 FRAME_WIDTH = 1024
 JPEG_QUALITY = 80
 STUCK_TURN_SECONDS = 25
+FIRST_COMMENT_AFTER = 3       # seconds after (re)connecting
+MIC_AUTO_OFF = 20             # mic turns itself off if you say nothing
 MAX_RETRIES = 5
 FATAL_ERRORS = {
     "api key not valid": "Your Google AI key doesn't work. Open TFTCoach and click \"Change key\".",
@@ -188,6 +190,10 @@ class LiveCoach:
         self._coach_text = ""
         self._user_text = ""
         self._send_end = False
+        self._heard_user = False      # mic on: the model transcribed the viewer
+        self._mic_since = 0.0
+        self._sent_seq = 0
+        self._last_frame_at = 0.0
 
     # ---------- thread-safe API for the UI ----------
     def start(self):
@@ -211,20 +217,28 @@ class LiveCoach:
     def toggle_mic(self):
         if self._loop is None:
             return
-        self.mic_on = not self.mic_on
         if self.mic_on:
+            self._mic_off()
+        else:
+            self._heard_user = False
+            self._mic_since = time.monotonic()
+            self.mic_on = True
             self._player.clear()        # stop the coach talking
             self._start_mic()
-        else:
-            self._stop_mic()
-            self._send_end = True       # commentator task sends audio_stream_end
+
+    def _mic_off(self):
+        if not self.mic_on:
+            return
+        self.mic_on = False
+        self._stop_mic()
+        self._send_end = True           # commentator task sends audio_stream_end
 
     @property
     def speaking(self) -> bool:
         return self._player.busy or self._model_turn
 
     def status_line(self) -> str:
-        mic = "MIC ON - speak now" if self.mic_on else "mic off"
+        mic = "MIC ON - ask your question" if self.mic_on else "mic off"
         state = "PAUSED" if self.paused else self.status
         return f"{state} | {mic}"
 
@@ -321,19 +335,26 @@ class LiveCoach:
     async def _connect_loop(self, client):
         failures = 0
         while not self._stop.is_set():
+            connected = False
             try:
                 async with client.aio.live.connect(model=self.model, config=self._config()) as session:
+                    connected = True
                     self.status = "Live"
                     failures = 0
                     reason = await self._session(session)
                 if self._stop.is_set():
                     break
                 print("Connection ended:", reason)
+                reason_text = "connection refresh"
             except Exception as e:
                 if self._stop.is_set():
                     break
                 failures += 1
-                print(f"Live connection error ({failures}/{MAX_RETRIES}):", repr(e))
+                reason_text = str(e)[:60]
+                print(f"Live connection error ({failures}/{MAX_RETRIES}, connected={connected}):", repr(e))
+                if not connected and self._handle and failures >= 2:
+                    print("Dropping the resume handle and starting a fresh session")
+                    self._handle = None
                 fatal = fatal_message(e)
                 if fatal:
                     self.status = "Stopped"
@@ -347,12 +368,14 @@ class LiveCoach:
                     self.caption = f"Couldn't reach the coach: {str(e)[:120]}"
                     self._transcript.note(f"Gave up after {MAX_RETRIES} retries: {e}")
                     return
-                await self._sleep(min(2 ** failures, 20))
+                await self._sleep(0.5 if connected else min(2 ** failures, 20))
             self._model_turn = False
             self._awaiting_since = None
             self._player.clear()
+            self._flush_turn()
+            self.caption = ""
             self.status = "Reconnecting..."
-            self._transcript.note("Reconnecting")
+            self._transcript.note(f"Reconnecting ({reason_text})")
 
     async def _sleep(self, seconds):
         end = time.monotonic() + seconds
@@ -397,15 +420,22 @@ class LiveCoach:
                     continue
                 if sc.interrupted:
                     self._player.clear()
+                    self._model_turn = False
                     self._flush_turn()
                 if sc.input_transcription and sc.input_transcription.text:
                     self._user_text += sc.input_transcription.text
+                    if self.mic_on:
+                        self._heard_user = True
                 if sc.model_turn and sc.model_turn.parts:
+                    if self.mic_on and self._heard_user:
+                        self._mic_off()          # the coach is answering: listen
                     if not self._model_turn:
                         self._model_turn = True
                         self._flush_user()
+                        self._coach_text = ""
                     for part in sc.model_turn.parts:
                         if part.inline_data and part.inline_data.data:
+                            # while you are still asking, the coach stays quiet
                             if not self.mic_on:
                                 self._player.add(part.inline_data.data)
                 if sc.output_transcription and sc.output_transcription.text:
@@ -435,21 +465,27 @@ class LiveCoach:
             self._transcript.line("Coach", self._coach_text)
         self._coach_text = ""
 
-    async def _frame_sender(self, session):
+    async def _send_latest_frame(self, session) -> bool:
         from google.genai import types
-        sent_seq = 0
+        with self._frame_lock:
+            frame, seq = self._frame, self._frame_seq
+        if frame is None or seq == self._sent_seq:
+            return False
+        self._sent_seq = seq
+        jpeg = await asyncio.to_thread(encode_frame, frame)
+        await session.send_realtime_input(video=types.Blob(data=jpeg, mime_type="image/jpeg"))
+        self.frames_sent += 1
+        self._last_frame_at = time.monotonic()
+        return True
+
+    async def _frame_sender(self, session):
+        self._sent_seq = 0          # new connection: resend the current frame
+        self._last_frame_at = 0.0
         while True:
-            await asyncio.sleep(FRAME_INTERVAL)
-            if self.paused:
+            await asyncio.sleep(0.1)
+            if self.paused or time.monotonic() - self._last_frame_at < FRAME_INTERVAL:
                 continue
-            with self._frame_lock:
-                frame, seq = self._frame, self._frame_seq
-            if frame is None or seq == sent_seq:
-                continue
-            jpeg = await asyncio.to_thread(encode_frame, frame)
-            await session.send_realtime_input(video=types.Blob(data=jpeg, mime_type="image/jpeg"))
-            sent_seq = seq
-            self.frames_sent += 1
+            await self._send_latest_frame(session)
 
     async def _mic_sender(self, session):
         from google.genai import types
@@ -461,9 +497,12 @@ class LiveCoach:
                 audio=types.Blob(data=data, mime_type=f"audio/pcm;rate={IN_RATE}"))
 
     async def _commentator(self, session):
-        last = time.monotonic()
+        last = time.monotonic() - self.talk_every + FIRST_COMMENT_AFTER
         while True:
             await asyncio.sleep(0.25)
+            if self.mic_on and not self._heard_user and time.monotonic() - self._mic_since > MIC_AUTO_OFF:
+                print("Mic auto-off (nothing heard)")
+                self._mic_off()
             if self._send_end:
                 self._send_end = False
                 await session.send_realtime_input(audio_stream_end=True)
@@ -478,6 +517,9 @@ class LiveCoach:
                 continue
             if self.frames_sent == 0:
                 continue
+            # only 1 fps is allowed: wait for the slot, then send the freshest frame
+            if now - self._last_frame_at >= FRAME_INTERVAL:
+                await self._send_latest_frame(session)
             await session.send_realtime_input(text=COMMENT_PROMPT)
             self._awaiting_since = now
             last = now

@@ -105,8 +105,12 @@ class ScreenCoach:
                                    font=("Segoe UI", 9, "bold"))
         self.status_lbl.pack(fill="x")
         self.caption_lbl = tk.Label(f, text="", bg=BG, fg=FG, anchor="nw", justify="left",
-                                    wraplength=PANEL_W - 24, font=("Segoe UI", 10))
+                                    wraplength=PANEL_W - 24, font=("Segoe UI", 11))
         self.caption_lbl.pack(fill="both", expand=True, pady=(4, 4))
+        # if the panel is resized/maximized, re-wrap and grow the caption text
+        f.bind("<Configure>", lambda e: self.caption_lbl.config(
+            wraplength=max(200, e.width - 24),
+            font=("Segoe UI", 11 if e.width < 700 else 20)))
         row = tk.Frame(f, bg=BG)
         row.pack(fill="x")
         self.mic_btn = tk.Button(row, text="Mic", width=8, command=self.toggle_mic, relief="flat")

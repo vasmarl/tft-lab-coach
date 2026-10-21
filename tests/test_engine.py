@@ -114,3 +114,58 @@ def test_bad_key_stops_without_retrying():
     err = Exception("1007 None. API key not valid. Please pass a valid API key.")
     assert "Change key" in engine.fatal_message(err)
     assert engine.fatal_message(Exception("1011 internal error")) is None
+
+
+class QuestionSession(FakeSession):
+    """Answers a spoken question: transcription of the viewer, then audio."""
+
+    async def send_realtime_input(self, **kw):
+        self.log.append(kw)
+        if kw.get("audio") is not None and not getattr(self, "asked", False):
+            self.asked = True
+            part = NS(inline_data=NS(data=b"\x01\x00" * 100))
+            await self.inbox.put([
+                msg(server_content=content(input_transcription=NS(text="Should I roll?"))),
+                msg(server_content=content(model_turn=NS(parts=[part]))),
+                msg(server_content=content(output_transcription=NS(text="Level first, then roll."))),
+                msg(server_content=content(turn_complete=True)),
+            ])
+
+
+def test_question_is_answered_out_loud_and_mic_turns_off(tmp_path, monkeypatch):
+    monkeypatch.setattr(engine, "app_dir", lambda: tmp_path)
+    log = []
+
+    class Ctx:
+        def __init__(self, model, config):
+            self.s = QuestionSession(log)
+
+        async def __aenter__(self):
+            return self.s
+
+        async def __aexit__(self, *a):
+            return False
+
+    client = NS(aio=NS(live=NS(connect=lambda model, config: Ctx(model, config))))
+    coach = engine.LiveCoach("k", talk_every=20, client_factory=lambda api_key: client)
+    played = []
+    coach._player.add = played.append
+    coach._start_mic = lambda: None
+    coach._transcript = engine.Transcript("live", "x", "m")
+    coach._thread = __import__("threading").Thread(target=coach._thread_main, daemon=True)
+    coach._thread.start()
+    while coach._loop is None or coach.status != "Live":
+        time.sleep(0.02)
+    coach.toggle_mic()
+    assert coach.mic_on
+    coach._loop.call_soon_threadsafe(coach._mic_queue.put_nowait, b"\x00\x00" * 1600)
+    deadline = time.time() + 3
+    while time.time() < deadline and coach.mic_on:
+        time.sleep(0.05)
+    time.sleep(0.5)
+    coach.stop()
+    assert not coach.mic_on                           # turned itself off
+    assert played                                     # answer was played, not dropped
+    assert any(s.get("audio_stream_end") for s in log)
+    text = coach.transcript_path.read_text()
+    assert "**You:** Should I roll?" in text and "**Coach:** Level first, then roll." in text
