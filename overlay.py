@@ -1,4 +1,6 @@
 """OpenCV drawing helpers shared by file mode and review mode."""
+import sys
+
 import cv2
 import numpy as np
 
@@ -6,10 +8,28 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 MAX_W, MAX_H = 1280, 720
 
 
+def screen_size() -> tuple:
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            u = ctypes.windll.user32
+            return u.GetSystemMetrics(0), u.GetSystemMetrics(1)
+        except Exception:
+            pass
+    return 1920, 1080
+
+
+def max_window() -> tuple:
+    """Largest video size that fits on screen with room for title bar + taskbar."""
+    sw, sh = screen_size()
+    return min(MAX_W, int(sw * 0.9)), min(MAX_H, sh - 140)
+
+
 def fit(frame: np.ndarray) -> np.ndarray:
-    """Scale a frame down so the window fits on a laptop screen."""
+    """Scale a frame down so the whole window (and caption bar) fits on screen."""
     h, w = frame.shape[:2]
-    scale = min(MAX_W / w, MAX_H / h, 1.0)
+    max_w, max_h = max_window()
+    scale = min(max_w / w, max_h / h, 1.0)
     if scale < 1.0:
         frame = cv2.resize(frame, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
     return frame

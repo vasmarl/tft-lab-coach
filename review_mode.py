@@ -167,6 +167,7 @@ def run(path: str, api_key: str, client=None) -> int:
                     shown = fit(frame)
                     if not sized:
                         cv2.resizeWindow(WINDOW, shown.shape[1], shown.shape[0])
+                        cv2.moveWindow(WINDOW, 20, 20)
                         sized = True
                     at = frame_idx / fps
                     if at >= next_sample and not busy.is_set():

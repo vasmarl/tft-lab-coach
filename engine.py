@@ -308,6 +308,17 @@ class LiveCoach:
             from google import genai
             self._client_factory = genai.Client
         client = self._client_factory(api_key=self.api_key)
+        try:
+            await self._connect_loop(client)
+        finally:
+            aclose = getattr(getattr(client, "aio", None), "aclose", None)
+            if aclose:
+                try:
+                    await aclose()
+                except Exception:
+                    pass
+
+    async def _connect_loop(self, client):
         failures = 0
         while not self._stop.is_set():
             try:
