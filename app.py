@@ -16,7 +16,7 @@ from datetime import datetime
 from common import APP_NAME, DEFAULT_TALK_EVERY, app_dir
 
 APP_MODULES = ["common", "keystore", "engine", "overlay", "file_mode", "launcher",
-               "safeguard", "capture", "screen_mode", "review_mode", "strategist"]
+               "safeguard", "capture", "screen_mode", "review_mode", "strategist", "hudread", "setdata", "rollodds"]
 
 
 def setup_output():
@@ -55,7 +55,8 @@ def report_crash(exc: BaseException, show_box: bool = True):
 
 def selftest() -> int:
     import importlib
-    deps = ["cv2", "numpy", "sounddevice", "mss", "psutil", "dotenv", "google.genai",
+    deps = ["cv2", "numpy", "sounddevice", "mss", "psutil", "dotenv", "google.genai", "onnxruntime",
+            "rapidocr_onnxruntime",
             "google.genai.types", "tkinter", "keyboard"]
     if sys.platform == "win32":
         deps += ["win32gui", "win32process", "win32api"]
@@ -69,6 +70,21 @@ def selftest() -> int:
     from engine import encode_frame
     encode_frame(np.zeros((90, 160, 3), np.uint8))
     portaudio = sd.get_portaudio_version()[1]
+    # OCR models load and read digits; set data is bundled; roll math runs
+    import cv2
+    import hudread
+    import rollodds
+    import setdata
+    img = np.full((120, 400, 3), 30, np.uint8)
+    cv2.putText(img, "3-2  47", (20, 80), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 3)
+    ocr_text = " ".join(t for t, *_ in hudread.read(img))
+    if "47" not in ocr_text:
+        raise RuntimeError(f"OCR self-check failed: {ocr_text!r}")
+    data = setdata.load()
+    if not data.get("champions"):
+        raise RuntimeError("Set data missing from the bundle")
+    rollodds.hit_chance(6, cost=2, need=1, gold=20, units_of_cost=13, trials=200)
+    loaded.append(f"ocr={ocr_text!r} set={data['set']['number']} champions={len(data['champions'])}")
     from google.genai import types
     types.LiveConnectConfig(response_modalities=["AUDIO"],
                             context_window_compression=types.ContextWindowCompressionConfig(

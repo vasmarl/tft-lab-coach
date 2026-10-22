@@ -28,8 +28,14 @@ The **Advice every (sec)** slider (4–20 s, default 6) sets how often the coach
 ## Cost
 
 - Live coaching (Gemini Live, about 1 frame/sec plus audio): **roughly $1–3 per full game** on a paid key. The free tier is enough to try it.
-- The **analyst** (gemini-4-argon, one high-resolution frame every ~10 s plus a web search for the current meta at start) adds to that; check your usage in Google AI Studio. If Argon isn't available on your key it switches to gemini-3.8-flash automatically. To turn the analyst off, add `TFT_ANALYST=off` to the `.env` file; to change its model, `TFT_STRATEGY_MODEL=...`.
+- The **analyst** (gemini-4-argon on a high-resolution frame at key moments: new round, shop/bench change, augment or carousel screen; at most every 4 s, at least every 12 s; plus a web search for the current meta at start) adds to that; check your usage in Google AI Studio. If Argon isn't available on your key it switches to gemini-3.8-flash automatically. To turn the analyst off, add `TFT_ANALYST=off` to the `.env` file; to change its model, `TFT_STRATEGY_MODEL=...`.
 - Review mode (`TFTCoach.exe --review game.mp4`, gemini-3.8-flash, 1 frame every 5 s): **about $0.10 per game**.
+
+## How the analyst gets its facts
+
+- **Exact numbers:** an offline OCR engine (RapidOCR, bundled) reads every digit on screen; stage, level and XP are parsed in code and override the AI's reading.
+- **Current set data:** champions, costs, traits with breakpoints and item recipes of the current set, built from CommunityDragon when the exe is built (`tft_set_data.json`; put a newer copy next to the exe to update without rebuilding).
+- **Roll math:** when the player is rolling for a unit, the hit chance is computed in code (shop odds × pool size, including the gold spent buying copies), also for "level first, then roll".
 
 ## Where files are saved
 

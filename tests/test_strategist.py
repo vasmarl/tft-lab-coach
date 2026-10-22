@@ -77,3 +77,40 @@ def test_live_prompt_carries_analyst_notes(tmp_path, monkeypatch):
     coach._on_analysis(strategist.parse_analysis(json.dumps(ANALYSIS)))
     prompt = coach.advice_prompt()
     assert "ANALYST NOTES" in prompt and "Roll to 10 gold now" in prompt
+
+
+def test_roll_target_gets_computed_odds(tmp_path, monkeypatch):
+    s, models, got = make(tmp_path, monkeypatch)
+    with_target = dict(ANALYSIS, roll_target={"unit": "Jinx", "cost": 1, "level": 5, "need": 5, "gold": 40})
+    models.generate_content = lambda model, contents, config: NS(text=json.dumps(with_target))
+    a = s.analyse(np.zeros((1080, 1920, 3), np.uint8), why="new round 3-2")
+    assert "to hit 5 more Jinx rolling 40 gold at level 5" in a["roll_math"]
+    assert a["why"] == "new round 3-2"
+    assert "Roll math (computed)" in strategist.notes_text(a)
+
+
+def test_roll_table_from_patch_notes(tmp_path, monkeypatch):
+    s, _, _ = make(tmp_path, monkeypatch)
+    s._apply_roll_table('Cheat sheet...\nROLL_TABLE {"shop_odds": {"5": [40, 35, 22, 3, 0]}, '
+                        '"pool_copies": {"1": 29, "2": 22, "3": 18, "4": 12, "5": 10}}')
+    assert s.roll_info["shop_odds"][5] == [40, 35, 22, 3, 0]
+    assert s.roll_info["shop_odds"][8] == [18, 25, 32, 22, 3]       # untouched levels keep defaults
+    assert s.roll_info["pool_copies"][4] == 12
+
+
+def test_moment_signature_detects_shop_change():
+    a = np.full((1080, 1920, 3), 60, np.uint8)
+    b = a.copy()
+    b[900:, :] = 200                      # shop/bench strip changed
+    full, bottom = strategist.change(strategist.signature(a), strategist.signature(b))
+    assert bottom > strategist.BOTTOM_CHANGE
+    c = np.full((1080, 1920, 3), 220, np.uint8)   # whole new screen
+    full, _ = strategist.change(strategist.signature(a), strategist.signature(c))
+    assert full > strategist.FULL_CHANGE
+
+
+def test_set_data_prompt():
+    import setdata
+    data = setdata.load()
+    text = setdata.prompt_text(data)
+    assert data["champions"] and "1-cost:" in text and "Item recipes:" in text

@@ -254,8 +254,10 @@ class LiveCoach:
         self._new_analysis = True
         if self._transcript:
             orders = " / ".join(analysis.get("now") or [])
-            self._transcript.note(f"Analyst [{analysis.get('stage', '?')}]: comp: {analysis.get('comp', '')}"
-                                  f" | plan: {analysis.get('plan', '')} | now: {orders}")
+            roll = f" | roll math: {analysis['roll_math']}" if analysis.get("roll_math") else ""
+            why = f" ({analysis['why']})" if analysis.get("why") else ""
+            self._transcript.note(f"Analyst [{analysis.get('stage', '?')}]{why}: comp: {analysis.get('comp', '')}"
+                                  f" | plan: {analysis.get('plan', '')} | now: {orders}{roll}")
 
     def advice_prompt(self) -> str:
         age = time.monotonic() - self._analysis_at

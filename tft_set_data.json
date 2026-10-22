@@ -1,0 +1,1165 @@
+{
+ "source": "CommunityDragon",
+ "version": "16.21.8298620+branch.releases-16-21.content.release",
+ "built": "2026-10-22",
+ "set": {
+  "number": 18,
+  "name": "Set10",
+  "mutator": "TFTSet18"
+ },
+ "units_per_cost": {
+  "3": 14,
+  "2": 13,
+  "4": 14,
+  "5": 10,
+  "1": 14
+ },
+ "champions": [
+  {
+   "name": "Akali",
+   "cost": 1,
+   "traits": [
+    "Inferno",
+    "Adaptor",
+    "Ravager"
+   ]
+  },
+  {
+   "name": "Camille",
+   "cost": 1,
+   "traits": [
+    "Coven",
+    "Ravager"
+   ]
+  },
+  {
+   "name": "Cinderling",
+   "cost": 1,
+   "traits": [
+    "Riftbeast",
+    "Hunter"
+   ]
+  },
+  {
+   "name": "Karma",
+   "cost": 1,
+   "traits": [
+    "Blossom",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Kobuko",
+   "cost": 1,
+   "traits": [
+    "Sprykin",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Leona",
+   "cost": 1,
+   "traits": [
+    "Solar",
+    "Defender"
+   ]
+  },
+  {
+   "name": "Ornn",
+   "cost": 1,
+   "traits": [
+    "Elderwood",
+    "Defender"
+   ]
+  },
+  {
+   "name": "Pebbles",
+   "cost": 1,
+   "traits": [
+    "Riftbeast",
+    "Invoker"
+   ]
+  },
+  {
+   "name": "Rakan",
+   "cost": 1,
+   "traits": [
+    "Fae",
+    "Juggernaut",
+    "Vanguard"
+   ]
+  },
+  {
+   "name": "Rek'Sai",
+   "cost": 1,
+   "traits": [
+    "Blackthorn",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Varus",
+   "cost": 1,
+   "traits": [
+    "Inferno",
+    "Rapidfire"
+   ]
+  },
+  {
+   "name": "Veigar",
+   "cost": 1,
+   "traits": [
+    "Blackthorn",
+    "Sprykin",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Xayah",
+   "cost": 1,
+   "traits": [
+    "Elderwood",
+    "Fae",
+    "Rapidfire"
+   ]
+  },
+  {
+   "name": "Yorick",
+   "cost": 1,
+   "traits": [
+    "Blossom",
+    "Juggernaut",
+    "Summoner"
+   ]
+  },
+  {
+   "name": "Alistar",
+   "cost": 2,
+   "traits": [
+    "Elderwood",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Caitlyn",
+   "cost": 2,
+   "traits": [
+    "Coven",
+    "Hunter"
+   ]
+  },
+  {
+   "name": "Elise",
+   "cost": 2,
+   "traits": [
+    "Coven",
+    "Vanguard"
+   ]
+  },
+  {
+   "name": "Gromp",
+   "cost": 2,
+   "traits": [
+    "Riftbeast",
+    "Adaptor"
+   ]
+  },
+  {
+   "name": "Kayle",
+   "cost": 2,
+   "traits": [
+    "Solar",
+    "Rapidfire"
+   ]
+  },
+  {
+   "name": "LeBlanc",
+   "cost": 2,
+   "traits": [
+    "Elderwood",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Murkwolf",
+   "cost": 2,
+   "traits": [
+    "Riftbeast",
+    "Ravager"
+   ]
+  },
+  {
+   "name": "Scuttlecrab",
+   "cost": 2,
+   "traits": [
+    "Riftbeast",
+    "Juggernaut"
+   ]
+  },
+  {
+   "name": "Sejuani",
+   "cost": 2,
+   "traits": [
+    "Solar",
+    "Juggernaut"
+   ]
+  },
+  {
+   "name": "Shen",
+   "cost": 2,
+   "traits": [
+    "Inferno",
+    "Defender"
+   ]
+  },
+  {
+   "name": "Teemo",
+   "cost": 2,
+   "traits": [
+    "Sprykin",
+    "Invoker"
+   ]
+  },
+  {
+   "name": "Warwick",
+   "cost": 2,
+   "traits": [
+    "Blackthorn",
+    "Ravager"
+   ]
+  },
+  {
+   "name": "Yunara",
+   "cost": 2,
+   "traits": [
+    "Blossom",
+    "Executioner"
+   ]
+  },
+  {
+   "name": "Azir",
+   "cost": 3,
+   "traits": [
+    "Blackthorn",
+    "Executioner",
+    "Summoner"
+   ]
+  },
+  {
+   "name": "Cassiopeia",
+   "cost": 3,
+   "traits": [
+    "Coven",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Diana",
+   "cost": 3,
+   "traits": [
+    "Lunar",
+    "Ravager",
+    "Vanguard"
+   ]
+  },
+  {
+   "name": "Fiddlesticks",
+   "cost": 3,
+   "traits": [
+    "Flora Fatalis",
+    "Defender",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Hecarim",
+   "cost": 3,
+   "traits": [
+    "Elderwood",
+    "Vanguard"
+   ]
+  },
+  {
+   "name": "Kha'Zix",
+   "cost": 3,
+   "traits": [
+    "Rival"
+   ]
+  },
+  {
+   "name": "Kog'Maw",
+   "cost": 3,
+   "traits": [
+    "Caustic",
+    "Adaptor",
+    "Invoker"
+   ]
+  },
+  {
+   "name": "Krug",
+   "cost": 3,
+   "traits": [
+    "Riftbeast",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Mama Beak",
+   "cost": 3,
+   "traits": [
+    "Riftbeast",
+    "Summoner",
+    "Rapidfire"
+   ]
+  },
+  {
+   "name": "Master Yi",
+   "cost": 3,
+   "traits": [
+    "Blossom",
+    "Adaptor"
+   ]
+  },
+  {
+   "name": "Rammus",
+   "cost": 3,
+   "traits": [
+    "Sprykin",
+    "Defender"
+   ]
+  },
+  {
+   "name": "Rengar",
+   "cost": 3,
+   "traits": [
+    "Rival"
+   ]
+  },
+  {
+   "name": "Tristana",
+   "cost": 3,
+   "traits": [
+    "Fae",
+    "Sprykin",
+    "Hunter"
+   ]
+  },
+  {
+   "name": "Vi",
+   "cost": 3,
+   "traits": [
+    "Primal",
+    "Juggernaut"
+   ]
+  },
+  {
+   "name": "Ahri",
+   "cost": 4,
+   "traits": [
+    "Blossom",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Amumu",
+   "cost": 4,
+   "traits": [
+    "Inferno",
+    "Juggernaut"
+   ]
+  },
+  {
+   "name": "Aphelios",
+   "cost": 4,
+   "traits": [
+    "Lunar",
+    "Rapidfire"
+   ]
+  },
+  {
+   "name": "Brambleback",
+   "cost": 4,
+   "traits": [
+    "Riftbeast",
+    "Ravager"
+   ]
+  },
+  {
+   "name": "Ezreal",
+   "cost": 4,
+   "traits": [
+    "Elderwood",
+    "Executioner"
+   ]
+  },
+  {
+   "name": "Lillia",
+   "cost": 4,
+   "traits": [
+    "Fae",
+    "Defender"
+   ]
+  },
+  {
+   "name": "Malphite",
+   "cost": 4,
+   "traits": [
+    "Blackthorn",
+    "Monolith"
+   ]
+  },
+  {
+   "name": "Morgana",
+   "cost": 4,
+   "traits": [
+    "Coven",
+    "Invoker"
+   ]
+  },
+  {
+   "name": "Nidalee",
+   "cost": 4,
+   "traits": [
+    "Primal",
+    "Adaptor"
+   ]
+  },
+  {
+   "name": "Sentinel",
+   "cost": 4,
+   "traits": [
+    "Riftbeast",
+    "Vanguard",
+    "Invoker"
+   ]
+  },
+  {
+   "name": "Sett",
+   "cost": 4,
+   "traits": [
+    "Blossom",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Sivir",
+   "cost": 4,
+   "traits": [
+    "Primal",
+    "Hunter"
+   ]
+  },
+  {
+   "name": "Soraka",
+   "cost": 4,
+   "traits": [
+    "Flora Fatalis",
+    "Executioner"
+   ]
+  },
+  {
+   "name": "Zyra",
+   "cost": 4,
+   "traits": [
+    "Thornmaiden",
+    "Summoner"
+   ]
+  },
+  {
+   "name": "Alune",
+   "cost": 5,
+   "traits": [
+    "Attuned",
+    "Lunar",
+    "Spellweaver"
+   ]
+  },
+  {
+   "name": "Ashe",
+   "cost": 5,
+   "traits": [
+    "Blossom",
+    "Hunter"
+   ]
+  },
+  {
+   "name": "Draven",
+   "cost": 5,
+   "traits": [
+    "Bounty Seeker"
+   ]
+  },
+  {
+   "name": "Elder Dragon",
+   "cost": 5,
+   "traits": [
+    "Apex Predator",
+    "Riftbeast"
+   ]
+  },
+  {
+   "name": "Gnar",
+   "cost": 5,
+   "traits": [
+    "Elderwood",
+    "Sprykin",
+    "Brawler"
+   ]
+  },
+  {
+   "name": "Ivern",
+   "cost": 5,
+   "traits": [
+    "Greenfather"
+   ]
+  },
+  {
+   "name": "Kennen",
+   "cost": 5,
+   "traits": [
+    "Inferno",
+    "Executioner"
+   ]
+  },
+  {
+   "name": "Lux",
+   "cost": 5,
+   "traits": [
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Blackthorn)",
+   "cost": 5,
+   "traits": [
+    "Blackthorn",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Blossom)",
+   "cost": 5,
+   "traits": [
+    "Blossom",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Coven)",
+   "cost": 5,
+   "traits": [
+    "Coven",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Elderwood)",
+   "cost": 5,
+   "traits": [
+    "Elderwood",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Fae)",
+   "cost": 5,
+   "traits": [
+    "Fae",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Inferno)",
+   "cost": 5,
+   "traits": [
+    "Inferno",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Lunar)",
+   "cost": 5,
+   "traits": [
+    "Lunar",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Primal)",
+   "cost": 5,
+   "traits": [
+    "Primal",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Lux (Solar)",
+   "cost": 5,
+   "traits": [
+    "Solar",
+    "Avatar"
+   ]
+  },
+  {
+   "name": "Maokai",
+   "cost": 5,
+   "traits": [
+    "Old Growth",
+    "Juggernaut"
+   ]
+  },
+  {
+   "name": "Taric",
+   "cost": 5,
+   "traits": [
+    "Emerald Aspect",
+    "Vanguard"
+   ]
+  }
+ ],
+ "traits": [
+  {
+   "name": "Elderwood",
+   "breakpoints": [
+    3,
+    5,
+    7,
+    9,
+    11
+   ]
+  },
+  {
+   "name": "Avatar",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Ravager",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Bounty Seeker",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Solar",
+   "breakpoints": [
+    3
+   ]
+  },
+  {
+   "name": "Sprykin",
+   "breakpoints": [
+    3,
+    5,
+    7
+   ]
+  },
+  {
+   "name": "Adaptor",
+   "breakpoints": [
+    2,
+    3,
+    4
+   ]
+  },
+  {
+   "name": "Coven",
+   "breakpoints": [
+    3,
+    4,
+    5,
+    7
+   ]
+  },
+  {
+   "name": "Eclipse",
+   "breakpoints": []
+  },
+  {
+   "name": "Hunter",
+   "breakpoints": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "Old Growth",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Monolith",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Primal",
+   "breakpoints": [
+    2,
+    4
+   ]
+  },
+  {
+   "name": "Greenfather",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Invoker",
+   "breakpoints": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "Rapidfire",
+   "breakpoints": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "Juggernaut",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Inferno",
+   "breakpoints": [
+    2,
+    3,
+    5,
+    7
+   ]
+  },
+  {
+   "name": "Attuned",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Rival",
+   "breakpoints": [
+    1,
+    2
+   ]
+  },
+  {
+   "name": "Vanguard",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Brawler",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Blackthorn",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Executioner",
+   "breakpoints": [
+    2,
+    3,
+    4
+   ]
+  },
+  {
+   "name": "Apex Predator",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Riftbeast",
+   "breakpoints": [
+    3,
+    5,
+    7,
+    10
+   ]
+  },
+  {
+   "name": "Caustic",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Fae",
+   "breakpoints": [
+    2,
+    4
+   ]
+  },
+  {
+   "name": "Lunar",
+   "breakpoints": [
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "name": "Defender",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Spellweaver",
+   "breakpoints": [
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "name": "Thornmaiden",
+   "breakpoints": [
+    1
+   ]
+  },
+  {
+   "name": "Flora Fatalis",
+   "breakpoints": [
+    1,
+    2
+   ]
+  },
+  {
+   "name": "Summoner",
+   "breakpoints": [
+    2,
+    3
+   ]
+  },
+  {
+   "name": "Blossom",
+   "breakpoints": [
+    3,
+    5,
+    7,
+    9,
+    11
+   ]
+  },
+  {
+   "name": "Emerald Aspect",
+   "breakpoints": [
+    1
+   ]
+  }
+ ],
+ "items": [
+  {
+   "name": "Adaptive Helm",
+   "from": [
+    "Negatron Cloak",
+    "Tear of the Goddess"
+   ]
+  },
+  {
+   "name": "Archangel's Staff",
+   "from": [
+    "Needlessly Large Rod",
+    "Tear of the Goddess"
+   ]
+  },
+  {
+   "name": "Bloodthirster",
+   "from": [
+    "B.F. Sword",
+    "Negatron Cloak"
+   ]
+  },
+  {
+   "name": "Blue Buff",
+   "from": [
+    "Tear of the Goddess",
+    "Tear of the Goddess"
+   ]
+  },
+  {
+   "name": "Bramble Vest",
+   "from": [
+    "Chain Vest",
+    "Chain Vest"
+   ]
+  },
+  {
+   "name": "Crownguard",
+   "from": [
+    "Needlessly Large Rod",
+    "Chain Vest"
+   ]
+  },
+  {
+   "name": "Deathblade",
+   "from": [
+    "B.F. Sword",
+    "B.F. Sword"
+   ]
+  },
+  {
+   "name": "Dragon's Claw",
+   "from": [
+    "Negatron Cloak",
+    "Negatron Cloak"
+   ]
+  },
+  {
+   "name": "Edge of Night",
+   "from": [
+    "B.F. Sword",
+    "Chain Vest"
+   ]
+  },
+  {
+   "name": "Evenshroud",
+   "from": [
+    "Negatron Cloak",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Gargoyle Stoneplate",
+   "from": [
+    "Chain Vest",
+    "Negatron Cloak"
+   ]
+  },
+  {
+   "name": "Giant Slayer",
+   "from": [
+    "B.F. Sword",
+    "Recurve Bow"
+   ]
+  },
+  {
+   "name": "Guinsoo's Rageblade",
+   "from": [
+    "Recurve Bow",
+    "Needlessly Large Rod"
+   ]
+  },
+  {
+   "name": "Hand Of Justice",
+   "from": [
+    "Tear of the Goddess",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Hextech Gunblade",
+   "from": [
+    "B.F. Sword",
+    "Needlessly Large Rod"
+   ]
+  },
+  {
+   "name": "Infinity Edge",
+   "from": [
+    "B.F. Sword",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Ionic Spark",
+   "from": [
+    "Needlessly Large Rod",
+    "Negatron Cloak"
+   ]
+  },
+  {
+   "name": "Jeweled Gauntlet",
+   "from": [
+    "Needlessly Large Rod",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Kraken's Fury",
+   "from": [
+    "Negatron Cloak",
+    "Recurve Bow"
+   ]
+  },
+  {
+   "name": "Last Whisper",
+   "from": [
+    "Recurve Bow",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Morellonomicon",
+   "from": [
+    "Needlessly Large Rod",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Nashor's Tooth",
+   "from": [
+    "Recurve Bow",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Protector's Vow",
+   "from": [
+    "Tear of the Goddess",
+    "Chain Vest"
+   ]
+  },
+  {
+   "name": "Quicksilver",
+   "from": [
+    "Sparring Gloves",
+    "Negatron Cloak"
+   ]
+  },
+  {
+   "name": "Rabadon's Deathcap",
+   "from": [
+    "Needlessly Large Rod",
+    "Needlessly Large Rod"
+   ]
+  },
+  {
+   "name": "Red Buff",
+   "from": [
+    "Recurve Bow",
+    "Recurve Bow"
+   ]
+  },
+  {
+   "name": "Spear of Shojin",
+   "from": [
+    "B.F. Sword",
+    "Tear of the Goddess"
+   ]
+  },
+  {
+   "name": "Spirit Visage",
+   "from": [
+    "Tear of the Goddess",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Steadfast Heart",
+   "from": [
+    "Chain Vest",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Sterak's Gage",
+   "from": [
+    "B.F. Sword",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Striker's Flail",
+   "from": [
+    "Giant's Belt",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Sunfire Cape",
+   "from": [
+    "Chain Vest",
+    "Giant's Belt"
+   ]
+  },
+  {
+   "name": "Tactician's Cape",
+   "from": [
+    "Spatula",
+    "Frying Pan"
+   ]
+  },
+  {
+   "name": "Tactician's Crown",
+   "from": [
+    "Spatula",
+    "Spatula"
+   ]
+  },
+  {
+   "name": "Tactician's Shield",
+   "from": [
+    "Frying Pan",
+    "Frying Pan"
+   ]
+  },
+  {
+   "name": "Thief's Gloves",
+   "from": [
+    "Sparring Gloves",
+    "Sparring Gloves"
+   ]
+  },
+  {
+   "name": "Titan's Resolve",
+   "from": [
+    "Chain Vest",
+    "Recurve Bow"
+   ]
+  },
+  {
+   "name": "Void Staff",
+   "from": [
+    "Recurve Bow",
+    "Tear of the Goddess"
+   ]
+  },
+  {
+   "name": "Warmog's Armor",
+   "from": [
+    "Giant's Belt",
+    "Giant's Belt"
+   ]
+  }
+ ]
+}

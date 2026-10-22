@@ -20,6 +20,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pyinstaller pytest
 
+      - name: Refresh current TFT set data (CommunityDragon)
+        continue-on-error: true
+        run: python tools/build_set_data.py - tft_set_data.json
+
       - name: Run tests
         run: python -m pytest -v tests
 
@@ -43,6 +47,12 @@ jobs:
           --hidden-import screen_mode
           --hidden-import review_mode
           --hidden-import strategist
+          --hidden-import hudread
+          --hidden-import setdata
+          --hidden-import rollodds
+          --collect-all rapidocr_onnxruntime
+          --collect-binaries onnxruntime
+          --add-data "tft_set_data.json;."
           app.py
 
       - name: Self-test the exe
