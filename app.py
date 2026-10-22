@@ -3,7 +3,7 @@
   TFTCoach.exe                   launcher
   TFTCoach.exe --file VIDEO      live coaching on a video file
   TFTCoach.exe --screen          live coaching on a window on screen
-  TFTCoach.exe --review VIDEO    cheaper round-by-round review (gemini-2.5-flash)
+  TFTCoach.exe --review VIDEO    cheaper round-by-round review (gemini-3.8-flash)
   TFTCoach.exe --selftest        import everything, write selftest_ok.txt, exit 0
 Options: --every SECONDS (talk interval, 4-20), --model NAME (live model)
 """
@@ -16,7 +16,7 @@ from datetime import datetime
 from common import APP_NAME, DEFAULT_TALK_EVERY, app_dir
 
 APP_MODULES = ["common", "keystore", "engine", "overlay", "file_mode", "launcher",
-               "safeguard", "capture", "screen_mode", "review_mode"]
+               "safeguard", "capture", "screen_mode", "review_mode", "strategist"]
 
 
 def setup_output():

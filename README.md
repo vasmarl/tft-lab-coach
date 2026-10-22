@@ -28,7 +28,8 @@ The **Advice every (sec)** slider (4–20 s, default 6) sets how often the coach
 ## Cost
 
 - Live coaching (Gemini Live, about 1 frame/sec plus audio): **roughly $1–3 per full game** on a paid key. The free tier is enough to try it.
-- Review mode (`TFTCoach.exe --review game.mp4`, gemini-2.5-flash, 1 frame every 5 s): **about $0.10 per game**.
+- The **analyst** (gemini-4-argon, one high-resolution frame every ~10 s plus a web search for the current meta at start) adds to that; check your usage in Google AI Studio. If Argon isn't available on your key it switches to gemini-3.8-flash automatically. To turn the analyst off, add `TFT_ANALYST=off` to the `.env` file; to change its model, `TFT_STRATEGY_MODEL=...`.
+- Review mode (`TFTCoach.exe --review game.mp4`, gemini-3.8-flash, 1 frame every 5 s): **about $0.10 per game**.
 
 ## Where files are saved
 
@@ -37,6 +38,7 @@ Everything goes in the **same folder as `TFTCoach.exe`**:
 - `.env`: your Google AI key (use *Change key* on the main screen to replace it)
 - `coach_live_log_<date>.md` / `coach_screen_log_<date>.md`: transcripts (your questions + the coach's answers, frames streamed, session length)
 - `coach_log_<date>.md`: review-mode tips + end-of-game review
+- `tft_meta_<date>.md`: the current-patch meta cheat sheet the analyst found that day
 - `tft_coach_output.log` (app output), `tft_coach_error.log` (crash details)
 
 **Videos only:** it never coaches live matches. Screen mode hides League/Riot windows and refuses to run while a League of Legends game is open.

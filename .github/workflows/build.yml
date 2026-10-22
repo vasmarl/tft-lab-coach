@@ -42,6 +42,7 @@ jobs:
           --hidden-import capture
           --hidden-import screen_mode
           --hidden-import review_mode
+          --hidden-import strategist
           app.py
 
       - name: Self-test the exe

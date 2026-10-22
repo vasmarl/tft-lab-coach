@@ -6,7 +6,8 @@ from pathlib import Path
 
 APP_NAME = "TFT Lab Coach"
 DEFAULT_LIVE_MODEL = "gemini-3.8-live"
-DEFAULT_REVIEW_MODEL = "gemini-2.5-flash"
+DEFAULT_REVIEW_MODEL = "gemini-3.8-flash"
+DEFAULT_STRATEGY_MODEL = "gemini-4-argon"
 DEFAULT_TALK_EVERY = 6
 
 
@@ -34,6 +35,10 @@ def live_model() -> str:
 
 def review_model() -> str:
     return os.environ.get("TFT_REVIEW_MODEL") or DEFAULT_REVIEW_MODEL
+
+
+def strategy_model() -> str:
+    return os.environ.get("TFT_STRATEGY_MODEL") or DEFAULT_STRATEGY_MODEL
 
 
 def self_command(*args: str) -> list:

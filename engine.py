@@ -5,6 +5,7 @@ methods: submit_frame(), toggle_mic(), set_paused(), stop(), and reads
 status / caption / mic_on.
 """
 import asyncio
+import os
 import threading
 import time
 from datetime import datetime
@@ -33,6 +34,11 @@ FATAL_ERRORS = {
 CAPTION_CHARS = 180
 COMMENT_PROMPT = ("Look at the newest frame. What is the single best thing the player should do "
                   "right now to win? Give the action and the reason.")
+ADVICE_PROMPT = """Give the player's next instruction now.
+Your analyst studied a high-resolution frame {age} s ago; their notes are below. Check them against the newest frame and say the most urgent order from "Do now" that you haven't said yet, with its reason. If the game moved on, adapt. When useful, add the plan for the next rounds in the same breath. No basics, no commentary.
+ANALYST NOTES:
+{notes}"""
+ANALYSIS_FRESH = 40          # seconds an analysis stays usable
 
 # Core rules that hold across TFT sets (set-specific traits/units are read from the screen).
 TFT_RULES = """TFT RULES YOU MUST APPLY EXACTLY:
@@ -49,7 +55,9 @@ TFT_RULES = """TFT RULES YOU MUST APPLY EXACTLY:
 SYSTEM_PROMPT = f"""You are a Challenger-level Teamfight Tactics (TFT) coach giving LIVE, step-by-step guidance on a RECORDED TFT game video.
 You receive about one frame per second. Call the person whose board is shown "the player".
 
-Your job is NOT commentary. Every time you speak, tell the player exactly what to do NEXT to maximize their chance to win (top 1, or at least top 4):
+You work with an analyst (a stronger model) who studies high-resolution frames and sends you notes with the target comp, item plan, econ/level/roll plan, positioning and orders. Speak their plan as your own; trust their reads of small numbers over yours, but drop anything the newest frame contradicts.
+
+Your job is NOT commentary, and NOT basics: the player already knows how interest, XP and rerolls work. Never say generic things like "manage your economy" or "position well". Every time you speak, tell the player exactly what to do NEXT to maximize their chance to win (top 1, or at least top 4):
 - Start with the action as an order, e.g. "Level to 6 now", "Roll down to 20 gold for Ahri two-star", "Slam Guinsoo's on Kog'Maw", "Hold at 50 and don't roll", "Move the carry to the back corner", "Take the Jeweled Lotus augment", "Sell the Darius, keep the pairs".
 - Then give the reason in a few words (interest, HP, odds, item math, what beats the lobby).
 - At most 2 short sentences. Be precise with numbers you can read on screen (gold, level, XP, stage, HP).
@@ -63,6 +71,7 @@ Don't repeat the same advice unless the player hasn't done it yet; then repeat i
 When the viewer asks a question out loud, answer it directly with a clear decision.
 
 {{TFT_RULES}}
+(Apply these rules silently; never recite them.)
 
 Speak English, fast, clear and decisive, like a pro coach sitting next to the player.""".replace("{TFT_RULES}", TFT_RULES)
 
@@ -216,6 +225,11 @@ class LiveCoach:
         self._mic_since = 0.0
         self._sent_seq = 0
         self._last_frame_at = 0.0
+        self.analysis = None
+        self._analysis_at = 0.0
+        self._new_analysis = False
+        self.strategist = None
+        self.use_strategist = os.environ.get("TFT_ANALYST", "on").lower() not in ("0", "off", "false")
 
     # ---------- thread-safe API for the UI ----------
     def start(self):
@@ -223,6 +237,32 @@ class LiveCoach:
         self._player.start()
         self._thread = threading.Thread(target=self._thread_main, daemon=True)
         self._thread.start()
+        if self.use_strategist:
+            from strategist import Strategist
+            self.strategist = Strategist(self.api_key, self.latest_frame, lambda: self.paused,
+                                         self._on_analysis)
+            self.strategist.start()
+
+    def latest_frame(self):
+        with self._frame_lock:
+            return self._frame, self._frame_seq
+
+    def _on_analysis(self, analysis: dict):
+        """Called from the analyst thread with a fresh game plan."""
+        self.analysis = analysis
+        self._analysis_at = time.monotonic()
+        self._new_analysis = True
+        if self._transcript:
+            orders = " / ".join(analysis.get("now") or [])
+            self._transcript.note(f"Analyst [{analysis.get('stage', '?')}]: comp: {analysis.get('comp', '')}"
+                                  f" | plan: {analysis.get('plan', '')} | now: {orders}")
+
+    def advice_prompt(self) -> str:
+        age = time.monotonic() - self._analysis_at
+        if self.analysis and age < ANALYSIS_FRESH:
+            from strategist import notes_text
+            return ADVICE_PROMPT.format(age=int(age), notes=notes_text(self.analysis))
+        return COMMENT_PROMPT
 
     def submit_frame(self, bgr):
         """Store the latest frame (old ones are dropped); None = nothing to send."""
@@ -262,12 +302,19 @@ class LiveCoach:
     def status_line(self) -> str:
         mic = "MIC ON - ask your question" if self.mic_on else "mic off"
         state = "PAUSED" if self.paused else self.status
+        if self.strategist:
+            if self.analysis:
+                state += f" | analyst {int(time.monotonic() - self._analysis_at)}s ago"
+            else:
+                state += " | analyst warming up"
         return f"{state} | {mic}"
 
     def stop(self, wait: float = 3.0):
         if self._stop.is_set():
             return
         self._stop.set()
+        if self.strategist:
+            self.strategist.stop()
         self._stop_mic()
         if self._thread:
             self._thread.join(timeout=wait)
@@ -533,7 +580,9 @@ class LiveCoach:
                 print("Resetting stuck turn")
                 self._awaiting_since = None
                 self._model_turn = False
-            if now - last < self.talk_every:
+            due = now - last >= self.talk_every
+            early = self._new_analysis and now - last >= FIRST_COMMENT_AFTER
+            if not (due or early):
                 continue
             if self.paused or self.mic_on or self.speaking or self._awaiting_since:
                 continue
@@ -542,6 +591,7 @@ class LiveCoach:
             # only 1 fps is allowed: wait for the slot, then send the freshest frame
             if now - self._last_frame_at >= FRAME_INTERVAL:
                 await self._send_latest_frame(session)
-            await session.send_realtime_input(text=COMMENT_PROMPT)
+            self._new_analysis = False
+            await session.send_realtime_input(text=self.advice_prompt())
             self._awaiting_since = now
             last = now

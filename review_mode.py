@@ -1,6 +1,6 @@
 """Review mode (command line only): cheaper, non-live.
 
-Plays the video, sends one frame every 5 s of video to gemini-2.5-flash for a
+Plays the video, sends one frame every 5 s of video to gemini-3.8-flash for a
 short JSON tip, shows + speaks it, then writes an end-of-game review.
 """
 import json
